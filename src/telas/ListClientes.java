@@ -9,6 +9,8 @@ import dao.ClienteDAO;
 import dao.ClienteFisicoDAO;
 import dao.ClienteJuridicoDAO;
 import java.util.List;
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ObjCliente;
 import model.ObjClienteFisico;
@@ -23,9 +25,12 @@ public class ListClientes extends javax.swing.JInternalFrame {
     /**
      * Creates new form ListClientes
      */
-    public ListClientes() {
+     private  JDesktopPane painelTelaInicial;
+     
+     public ListClientes(JDesktopPane painelTelaInicial) {
         initComponents();
         carregarTabela("");
+        this.painelTelaInicial = painelTelaInicial;
     }
 
     /**
@@ -41,6 +46,8 @@ public class ListClientes extends javax.swing.JInternalFrame {
         cmbTipo = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableClientes = new javax.swing.JTable();
+        btnEditar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
@@ -58,6 +65,11 @@ public class ListClientes extends javax.swing.JInternalFrame {
                 cmbTipoItemStateChanged(evt);
             }
         });
+        cmbTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbTipoActionPerformed(evt);
+            }
+        });
 
         tableClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -72,6 +84,15 @@ public class ListClientes extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(tableClientes);
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
+        btnExcluir.setText("Excluir");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,11 +101,16 @@ public class ListClientes extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEditar)
+                            .addComponent(btnExcluir)))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(30, 30, 30)
-                        .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(416, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)))
+                        .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,8 +120,14 @@ public class ListClientes extends javax.swing.JInternalFrame {
                         .addContainerGap()
                         .addComponent(jLabel1))
                     .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnEditar)
+                        .addGap(94, 94, 94)
+                        .addComponent(btnExcluir)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -118,7 +150,24 @@ public class ListClientes extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_cmbTipoItemStateChanged
 
-    private void carregarTabela( String tipo ){
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+       int linha = tableClientes.getSelectedRow();
+       if( linha == -1 ){
+           JOptionPane.showMessageDialog(this, 
+                   "Você deve selecionar um Cliente!");
+       }else{
+           int codigo = (int)tableClientes.getValueAt(linha, 0);
+           FrmCliente formulario = new FrmCliente(codigo, this);
+           this.painelTelaInicial.add(formulario);
+           formulario.setVisible(true);
+       }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void cmbTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbTipoActionPerformed
+
+    public void carregarTabela( String tipo ){
         DefaultTableModel modelo = new DefaultTableModel();
         String[] colunas = {};
         
@@ -194,6 +243,8 @@ public class ListClientes extends javax.swing.JInternalFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JComboBox<String> cmbTipo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -51,15 +51,33 @@ public class CidadeDAO {
                 
                 JOptionPane.showMessageDialog(null, e.toString());
                 
-                
-
+               
             }
             
-            
+         
         }
 
         return lista;
 
+    }
+    public static ObjCidade getCidadeByCodigo(int codigo){
+        ObjCidade  cidade = new ObjCidade();
+        
+        String sql = "SELECT codigo, nome FROM cidades "
+                + " WHERE codigo = " + codigo;
+        ResultSet rs = Conexao.consultar(sql);
+        try{
+            rs.first();
+            cidade.setCodigo(rs.getInt( 1 ));
+            cidade.setNome(rs.getString( 2 ));
+            
+        }catch (Exception e){
+            
+            JOptionPane.showMessageDialog(null, e.toString());
+            
+        }
+        
+        return cidade;
     }
 
 }

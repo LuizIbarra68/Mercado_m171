@@ -26,26 +26,72 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     /**
      * Creates new form FrmCliente
      */
+    private boolean novo;
+    private Object cliente;
+    private  ListClientes telaListClientes;
+    private List<ObjCidade> listaDeCidades;
+
     public FrmCliente() {
         initComponents();
         esconder();
         carregarCidades();
+        cliente = new ObjCliente();
         lblCodigo.setText("");
+        novo = true;
+
     }
-    
-    private void carregarCidades(){
-        List<ObjCidade> listaDeCidades = CidadeDAO.getCidades();
+
+    public FrmCliente(int codigo, ListClientes telaListClientes) {
+        initComponents();
+        esconder();
+        carregarCidades();
+        novo = false;
+        cliente = ClienteDAO.getClienteByCodigo(codigo);
+        carregarFormulario();
+        this.telaListClientes = telaListClientes;
+
+    }
+
+    private void carregarFormulario() {
+        ObjCliente cli = (ObjCliente) cliente;
+        txtNome.setText(cli.getNome());
+        txtTelefone.setText(cli.getTelefone());
+        txtEndereco.setText(cli.getEndereco());
+        lblCodigo.setText(String.valueOf(cli.getCodigo()));
+
+        for (int i = 1; i < listaDeCidades.size(); i++) {
+            ObjCidade cid = listaDeCidades.get(i);
+            if (cid.getCodigo() == cli.getCidade().getCodigo()) {
+                cmbCidade.setSelectedIndex(i);
+                break;
+            }
+        }
+        if (cli.getTipo().equals(ObjCliente.PESSOA_FISICA)) {
+            ObjClienteFisico cf = (ObjClienteFisico) cliente;
+            rbPF.setSelected(true);
+            txtCPF.setText(cf.getCpf());
+            txtRG.setText((cf.getRg()));
+        }
+        if (cli.getTipo().equals(ObjCliente.PESSOA_JURIDICA)) {
+            ObjClienteJuridico cf = (ObjClienteJuridico) cliente;
+            rbPF.setSelected(true);
+            txtCPF.setText(cf.getCnpj());
+            txtRG.setText((cf.getIe()));
+        }
+    }
+
+    private void carregarCidades() {
+        listaDeCidades = CidadeDAO.getCidades();
         ObjCidade fake = new ObjCidade(0, "Selecione...");
         listaDeCidades.add(0, fake);
-        
+
         DefaultComboBoxModel modelo = new DefaultComboBoxModel();
-        
-        for( ObjCidade cid : listaDeCidades){
+
+        for (ObjCidade cid : listaDeCidades) {
             modelo.addElement(cid);
         }
         cmbCidade.setModel(modelo);
-        
-        
+
     }
 
     private void esconder() {
@@ -311,7 +357,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
             escolherPJ();
         }
     }//GEN-LAST:event_rbPFItemStateChanged
-    private void limparFormulario(){
+    private void limparFormulario() {
         txtNome.setText("");
         txtTelefone.setText("");
         txtEndereco.setText("");
@@ -322,10 +368,10 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         buttonGroupTipo.clearSelection();
         cmbCidade.setSelectedIndex(0);
         esconder();
-        
+
     }
     private void rbPJItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbPJItemStateChanged
-       if (rbPJ.isSelected()) {
+        if (rbPJ.isSelected()) {
             escolherPJ();
 
         } else {
@@ -334,17 +380,18 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbPJItemStateChanged
 
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
-       limparFormulario();
+        limparFormulario();
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         String nome = txtNome.getText();
         ObjCidade cidade = (ObjCidade) cmbCidade.getSelectedItem();
-        if( nome.isEmpty() || cidade.getCodigo() == 0 ){
-            JOptionPane.showMessageDialog(this, "Prencha todos os campos obrigatórios! (Nome e cidade) " );
-        }else{
-            if( rbPF.isSelected() ){
+        if (nome.isEmpty() || cidade.getCodigo() == 0) {
+            JOptionPane.showMessageDialog(this, "Prencha todos os campos obrigatórios! (Nome e cidade) ");
+        } else {
+            if (rbPF.isSelected()) {
                 ObjClienteFisico cf = new ObjClienteFisico();
+                cf.setCodigo((Integer.valueOf(lblCodigo.getText())));
                 cf.setNome(nome);
                 cf.setEndereco(txtEndereco.getText());
                 cf.setTelefone(txtTelefone.getText());
@@ -352,9 +399,16 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 cf.setTipo(ObjCliente.PESSOA_FISICA);
                 cf.setCpf(txtCPF.getText());
                 cf.setRg(txtRG.getText());
-                ClienteFisicoDAO.inserir(cf);
-            }else  if(rbPJ.isSelected())  {
+
+                if (novo) {
+                    ClienteFisicoDAO.inserir(cf);
+                } else {
+                    ClienteFisicoDAO.editar(cf);
+                    telaListClientes.carregarTabela(ObjCliente.PESSOA_FISICA);
+                }
+            } else if (rbPJ.isSelected()) {
                 ObjClienteJuridico cj = new ObjClienteJuridico();
+                
                 cj.setNome(nome);
                 cj.setEndereco(txtEndereco.getText());
                 cj.setTelefone(txtTelefone.getText());
@@ -362,18 +416,39 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 cj.setIe(txtIE.getText());
                 cj.setCidade(cidade);
                 cj.setTipo(ObjCliente.PESSOA_JURIDICA);
-                ClienteJuridicoDAO.inserir(cj);
-                
-            }else{
-               ObjCliente cli = new ObjCliente();
-               cli.setNome(nome);
-               cli.setTelefone(txtTelefone.getText());
-               cli.setEndereco(txtEndereco.getText());
-               cli.setTipo("");
-               cli.setCidade(cidade);
-               ClienteDAO.inserir(cli);
+
+                if (novo) {
+
+                    ClienteJuridicoDAO.inserir(cj);
+
+                } else {
+                  cj.setCodigo((Integer.valueOf(lblCodigo.getText())));
+                  ClienteJuridicoDAO.editar(cj);
+                  telaListClientes.carregarTabela(ObjCliente.PESSOA_JURIDICA);  
+                }
+
+            } else {
+                ObjCliente cli = new ObjCliente();
+                cli.setNome(nome);
+                cli.setTelefone(txtTelefone.getText());
+                cli.setEndereco(txtEndereco.getText());
+                cli.setTipo("");
+                cli.setCidade(cidade);
+
+                if (novo) {
+                    ClienteDAO.inserir(cli);
+                } else {
+                    cli.setCodigo((Integer.valueOf(lblCodigo.getText())));
+                    ClienteDAO.editar(cli);
+                    telaListClientes.carregarTabela("");  
+                }
+
             }
+
             limparFormulario();
+            if (!novo) {
+                this.dispose();
+            }
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 

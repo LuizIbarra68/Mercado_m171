@@ -7,6 +7,7 @@ package telas;
 
 import dao.CidadeDAO;
 import java.util.List;
+import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ObjCidade;
@@ -20,12 +21,16 @@ public class ListCidades extends javax.swing.JInternalFrame {
     /**
      * Creates new form ListCidades
      */
-    public ListCidades() {
+   private  JDesktopPane painelTelaInicial;
+        
+    
+    public ListCidades(JDesktopPane painelTelaInicial) {
         initComponents();
         carregarTabela();
+        this.painelTelaInicial = painelTelaInicial;
     }
     
-    private void carregarTabela(){
+    public void carregarTabela(){
         DefaultTableModel modelo = new DefaultTableModel();
         String[] colunas = {"Código", "Nome da Cidade"};
         modelo.setColumnIdentifiers(colunas);
@@ -37,7 +42,7 @@ public class ListCidades extends javax.swing.JInternalFrame {
         }
         tableCidades.setModel(modelo);
         
-    }       
+    }   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,22 +52,17 @@ public class ListCidades extends javax.swing.JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableCidades = new javax.swing.JTable();
         btnEditar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
-        btnSalvarPDF = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
         setMaximizable(true);
+        setResizable(true);
         setTitle("Lista de Cidades");
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel1.setText("Cidades cadastradas");
 
         tableCidades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -77,29 +77,17 @@ public class ListCidades extends javax.swing.JInternalFrame {
         ));
         jScrollPane1.setViewportView(tableCidades);
 
-        btnEditar.setText("EDITAR");
+        btnEditar.setText("Editar");
         btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditarActionPerformed(evt);
             }
         });
 
-        btnExcluir.setText("EXCLUIR");
+        btnExcluir.setText("Excluir");
         btnExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExcluirActionPerformed(evt);
-            }
-        });
-
-        btnSalvarPDF.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        btnSalvarPDF.setText("SALVAR PDF");
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, tableCidades, org.jdesktop.beansbinding.ObjectProperty.create(), btnSalvarPDF, org.jdesktop.beansbinding.BeanProperty.create("selected"));
-        bindingGroup.addBinding(binding);
-
-        btnSalvarPDF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarPDFActionPerformed(evt);
             }
         });
 
@@ -109,73 +97,69 @@ public class ListCidades extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(46, 46, 46)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnEditar)
-                            .addComponent(btnExcluir)
-                            .addComponent(btnSalvarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(btnEditar)
+                    .addComponent(btnExcluir))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(49, 49, 49)
-                        .addComponent(btnEditar)
-                        .addGap(49, 49, 49)
-                        .addComponent(btnSalvarPDF)
-                        .addGap(53, 53, 53)
-                        .addComponent(btnExcluir)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 8, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(btnEditar)
+                .addGap(90, 90, 90)
+                .addComponent(btnExcluir)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-       
         int linha = tableCidades.getSelectedRow();
         if( linha == -1){
             JOptionPane.showMessageDialog(this, 
                     "Você deve selecionar uma cidade!");
         }else{
-            ObjCidade cid = new ObjCidade();
-            int codigo = (int) tableCidades.getModel().getValueAt(linha, 0);
-            cid.setCodigo(codigo);
-           CidadeDAO.excluir(cid); 
-           carregarTabela();
+            String nome = (String) tableCidades.getValueAt(linha, 1);
+            int resposta = JOptionPane.showConfirmDialog(this, 
+                    "Confirma a exclusão da cidade" + nome + "? ",
+                    "Excluir Cidade",
+                    JOptionPane.YES_NO_OPTION);
+            if( resposta == JOptionPane.YES_OPTION){
+            
+                ObjCidade cid = new ObjCidade();
+                int codigo = (int) tableCidades.getModel().getValueAt(linha, 0);
+                cid.setCodigo(codigo);
+                CidadeDAO.excluir(cid); 
+                carregarTabela();
+            }
         }
-        
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void btnSalvarPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarPDFActionPerformed
-        
-    }//GEN-LAST:event_btnSalvarPDFActionPerformed
-
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        // TODO add your handling code here:
+        int linha = tableCidades.getSelectedRow();
+       if( linha == -1 ){
+           JOptionPane.showMessageDialog(this, 
+                   "Você deve selecionar uma cidade!");
+       }else{
+           int codigo = (int)tableCidades.getValueAt(linha, 0);
+           FrmCidade formulario = new FrmCidade(codigo, this);
+           this.painelTelaInicial.add(formulario);
+           formulario.setVisible(true);
+       }
     }//GEN-LAST:event_btnEditarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
-    private javax.swing.JButton btnSalvarPDF;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tableCidades;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }

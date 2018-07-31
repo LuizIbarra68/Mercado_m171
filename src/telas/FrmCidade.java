@@ -17,11 +17,28 @@ public class FrmCidade extends javax.swing.JInternalFrame {
     /**
      * Creates new form FrmCidade
      */
+    private ObjCidade cidade;
+    private boolean novo;
+    private ListCidades telaListCidades;
+    
     public FrmCidade() {
         initComponents();
         lblCodigo.setText("");
+        cidade = new ObjCidade();
+        novo = true;
     }
-
+     public FrmCidade(int codigo, ListCidades telaListCidades) {
+        initComponents();
+        cidade = CidadeDAO.getCidadeByCodigo(codigo);
+        carregarFormulario();
+        novo = false;
+        this.telaListCidades = telaListCidades;
+    }
+     private void carregarFormulario(){
+         lblCodigo.setText(String.valueOf(cidade.getCodigo() ));
+         txtNome.setText(cidade.getNome());
+         
+     }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -126,9 +143,17 @@ public class FrmCidade extends javax.swing.JInternalFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         String nome = txtNome.getText();
         if (!nome.isEmpty()) {
-            ObjCidade cidade = new ObjCidade();
+            
             cidade.setNome(txtNome.getText());
-            CidadeDAO.inserir(cidade);
+            if(novo){
+                CidadeDAO.inserir( cidade );
+            }else{
+                CidadeDAO.editar( cidade );
+                telaListCidades.carregarTabela();
+                this.dispose();
+            }
+            
+            
             txtNome.setText("");
     }//GEN-LAST:event_btnSalvarActionPerformed
     }
